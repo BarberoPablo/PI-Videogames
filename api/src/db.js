@@ -33,7 +33,6 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // *Me traigo mis models
 const { Videogame, Genre } = sequelize.models;
-console.log("XD: ",sequelize.models);
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
 // *Relaciono los models entre sí:
