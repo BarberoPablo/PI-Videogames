@@ -5,10 +5,10 @@ const Card = ({ name, genres, image }) => {
   return (
     <div>
       <h3>{name}</h3>
-      {genres?.map((genre, index) => {
-        return <h3 key={index}>{genre}</h3>;
-      })}
-      <img src={image} alt="videogame" width="200px" height="200px" />
+      {genres?.map((genre, index) => (
+        <h3 key={index}>{genre}</h3>
+      ))}
+      <img src={image} alt="videogame" width="400px" height="200px" />
     </div>
   );
 };

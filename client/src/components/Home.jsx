@@ -51,9 +51,16 @@ const Home = () => {
           ))}
         </select>
       </div>
-      {allVideogames.map((videogame) => (
-        <div>{videogame.name}</div>
-      ))}
+      {allVideogames?.map((videogame, index) => {
+        //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
+        let parsedGenres = videogame.genres;
+        if (videogame.createdInDB) {
+          console.log("before: ", parsedGenres);
+          parsedGenres = parsedGenres.map((genre) => genre.name);
+          console.log("after: ", parsedGenres);
+        }
+        return <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />;
+      })}
       {/* {allGenres.map((genre) => (
             <div>{genre}</div>
           ))} */}
