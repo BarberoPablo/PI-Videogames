@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
     },
     platforms: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
     },
     //Para ahorrar tiempo de busqueda, creo una propiedad la cual solo van a tener los elementos creados en la base de datos y no en la API,

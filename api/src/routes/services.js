@@ -8,16 +8,11 @@ const axios = require("axios");
 // Me traigo mis models:
 const { Genre, Videogame } = require("../db");
 
-const api = {
-  baseUrl: "https://api.rawg.io/api/",
-};
-
 // Funcion para traerme la informacion de la API:
 const getApiInfo = async () => {
-  const path = "games?key=1c2e5616d523474c8d03ab478ccd169e&page_size=10000"; //solo me trae 40
-  const url = `${api.baseUrl}${path}`;
-  const response = await axios.get(url);
-
+  const response = await axios.get(
+    "https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e&page_size=10000"
+  );
   //results son los juegos
   //voy a traerme ciertas caracteristicas, no todo
   //voy a poner todo en minúscula para evitar futuros problemas
@@ -30,10 +25,8 @@ const getApiInfo = async () => {
 };
 
 // Para poder usar getApiInfo tengo que hacer una funcion anonima, no puedo hacer en el root:
-// (quiero solo llamar una vez a la api asi es más rápido aunque no se va a actualizar si se pone algun juego nuevo)
-// const videogamesFromApi = await getApiInfo();
+// (quiero solo llamar una vez a la api asi es más rápido aunque no se va a actualizar si se pone algun juego nuevo en la API)
 // no me deja hacer await en root
-
 let videogamesFromApi = null;
 (async () => {
   videogamesFromApi = await getApiInfo();
@@ -76,6 +69,27 @@ const getGenres = async () => {
   });
   return genres;
 };
+/*
+const getGenres = async () => {
+  const apiGenres = await axios.get("https://api.rawg.io/api/genres?key=1c2e5616d523474c8d03ab478ccd169e");
+  const genres = apiGenres.data.results.map((genre) => {
+    Genre.findOrCreate({
+      where: { name: genre.name },
+    });
+    return genre.name;
+  });
+  console.log("GENEROS: ", genres);
+  return genres;
+};
+*/
+
+// Para poder usar getApiInfo tengo que hacer una funcion anonima, no puedo hacer en el root:
+// (quiero solo llamar una vez a la api asi es más rápido aunque no se va a actualizar si se pone algun juego nuevo en la API)
+// no me deja hacer await en root
+let genresFromDb = null;
+(async () => {
+  genresFromDb = await getGenres();
+})();
 
 // Voy a unificar estos dos get:
 // GET /videogames
@@ -109,8 +123,29 @@ const videogameDetails = async (req, res) => {
   const { idVideogame } = req.params;
   try {
     if (isNaN(idVideogame)) {
-      //es uno de mi DB
-      const videogameDetails = await Videogame.findOne({ id: idVideogame });
+      //es uno de mi DB, ya que yo uso un hash alfanumerico en el id
+      const videogameDetails = await Videogame.findOne({
+        Where: { id: idVideogame },
+        include: {
+          model: Genre,
+          attributes: ["name"], //el id lo trae solo
+          through: {
+            attributes: [],
+          },
+        },
+      });
+
+      /*
+      return await Videogame.findAll({
+    include: {
+      model: Genre,
+      attributes: ["name"], //el id lo trae solo
+      through: {
+        attributes: [],
+      },
+    },
+  });
+  */
       res.status(200).json(videogameDetails);
     } else {
       const detailsRequest = await axios.get(
@@ -120,7 +155,7 @@ const videogameDetails = async (req, res) => {
         description: detailsRequest.data.description,
         image: detailsRequest.data.background_image,
         platforms: detailsRequest.data.parent_platforms,
-        genres: detailsRequest.data.genres.map((genre) => genre.name),
+        genres: detailsRequest.data.genres.map((genre) => genre.name), //Mostrarlos de otra forma
         rating: detailsRequest.data.rating,
         released: detailsRequest.data.released,
       };
@@ -135,7 +170,6 @@ const videogameDetails = async (req, res) => {
 const createVideogame = async (req, res) => {
   try {
     const { name, description, released, rating, platforms, createdInDB, genre } = req.body;
-
     if (!name || !description || !platforms) throw new Error("Missing data");
     // Usando "getGenres" voy a traerme los genres de la API hacia mi DB si es que ya no lo hice antes:
     const dbGenres = await getGenres();
@@ -153,8 +187,14 @@ const createVideogame = async (req, res) => {
     const videogameGenres = await Genre.findAll({
       where: { name: genre },
     });
-    newVideogame.addGenre(videogameGenres); //metodo add de sequelize
-    res.status(201).send("Videogame created successfully");
+    //voy a intentar hacer pushs
+    videogameGenres.forEach((genre) => {
+      newVideogame.addGenre(genre);
+    });
+
+    //newVideogame.addGenre(videogameGenres); //metodo add de sequelize
+    //res.status(201).send("Videogame created successfully");
+    res.status(201).json(newVideogame);
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -162,8 +202,8 @@ const createVideogame = async (req, res) => {
 
 const listGenres = async (req, res) => {
   try {
-    const dbGenres = await getGenres();
-    res.status(200).json(dbGenres);
+    //const dbGenres = await getGenres();
+    res.status(200).json(genresFromDb);
   } catch (error) {
     res.status(400).send(error.message);
   }
