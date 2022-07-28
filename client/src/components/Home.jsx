@@ -40,29 +40,33 @@ const Home = () => {
 
   const handleOnClick = (e) => {
     e.preventDefault();
+    //necesito volver a la pagina 1 porque si estoy en otra y hay pocos juegos creados, no me los va a mostrar porque hay solo 1 pagina
+    setCurrentPage(1);
     dispatch(getVideogames());
   };
 
   const handleFilterByGenre = (e) => {
     e.preventDefault();
+    setCurrentPage(1);
     dispatch(filterVideogamesByGenre(e.target.value));
   };
 
   const handleFilterByCreator = (e) => {
     e.preventDefault();
+    setCurrentPage(1);
     dispatch(filterVideogamesByCreator(e.target.value));
   };
 
   const handleOrderByName = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    if (e.target === ("A-Z" || "Z-A")) {
+    if (value === "A-Z" || value === "Z-A") {
       dispatch(orderByName(value, "name"));
     } else {
       dispatch(orderByName(value, "rating"));
     }
     setCurrentPage(1);
-    //tengo que modificar un estado para que se vuelvan a renderizar los videogames, si no no se renderizan
+    //tengo que modificar un estado para que se vuelvan a renderizar los videogames, si no, no se renderizan otra vez
     setOrder(`Order ${e.target.value}`);
   };
 

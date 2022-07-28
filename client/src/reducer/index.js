@@ -47,35 +47,39 @@ const rootReducer = (state = initialState, action) => {
 
     case actionTypes.orderByName: {
       //unifico las comparaciones ascendentes y descendentes por rating o name
+      const sortType = action.payload[0];
       const compareProp = action.payload[1];
       console.log("reducer compareProp", compareProp);
-      console.log("reducer compareProp type", typeof compareProp);
       console.log("reducer compareProp az za 50 05", action.payload[0]);
-      console.log("reducer compareProp type", typeof action.payload[0]);
-      let sortedVideogames =
-        action.payload[0] === ("A-Z" || "5-0")
-          ? state.videogames.sort(function (a, b) {
-              //console.log("a.compareProp", a[compareProp]);
-              if (a[compareProp] > b[compareProp]) {
-                return 1;
-              }
-              if (b[compareProp] > a[compareProp]) {
-                return -1;
-              }
-              return 0;
-            })
-          : state.videogames.sort(function (a, b) {
-              if (a[compareProp] > b[compareProp]) {
-                return -1;
-              }
+      let sortedVideogames = [];
+      if (sortType === "A-Z" || sortType === "0-5") {
+        console.log("entre a ascendente");
+        sortedVideogames = state.videogames.sort(function (a, b) {
+          //console.log("a.compareProp", a[compareProp]);
+          if (a[compareProp] > b[compareProp]) {
+            console.log(a[compareProp] > b[compareProp]);
+            return 1;
+          }
+          if (b[compareProp] > a[compareProp]) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        console.log("entre a decendente");
+        sortedVideogames = state.videogames.sort(function (a, b) {
+          if (a[compareProp] > b[compareProp]) {
+            return -1;
+          }
 
-              if (b[compareProp] > a[compareProp]) {
-                return 1;
-              }
-              return 0;
-            });
+          if (b[compareProp] > a[compareProp]) {
+            return 1;
+          }
+          return 0;
+        });
+      }
       sortedVideogames.map((v) => {
-        console.log(v.name);
+        //console.log(v.name);
         console.log(v.rating);
       });
       return {

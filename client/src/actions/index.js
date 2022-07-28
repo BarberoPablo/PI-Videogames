@@ -49,10 +49,18 @@ export const filterVideogamesByCreator = (creator) => {
 
 // Recibo un orderType, asc o desc y compareProp es la propiedad la cual voy a comparar, ya sea name o rating
 export const orderByName = (orderType, compareProp) => {
-  console.log("Ejecuta action orderByName con: ", orderType);
-  console.log("orderType:", orderType, "compareProp:", compareProp);
   return {
     type: actionTypes.orderByName,
     payload: [orderType, compareProp],
+  };
+};
+
+export const getVideogamesNames = () => {
+  return async function (dispatch) {
+    var json = await axios.get(`http://localhost:3001/genres`);
+    return dispatch({
+      type: actionTypes.getGenres,
+      payload: json.data,
+    });
   };
 };
