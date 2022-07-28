@@ -1,9 +1,13 @@
 import { React, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Card from "./Card";
+import Paginado from "./Paginado";
 import { getVideogames } from "../actions";
 import { getGenres } from "../actions";
-import Card from "./Card";
+import { filterVideogamesByGenre } from "../actions";
+import { filterVideogamesByCreator } from "../actions";
+import { orderByName } from "../actions";
 
 const Home = () => {
   // Para poder hacer dispatch de mis actions uso:
@@ -12,6 +16,20 @@ const Home = () => {
   // Por que hago esto y no uso con dispatch la action que me trae los videogames?
   const allVideogames = useSelector((state) => state.videogames);
   const allGenres = useSelector((state) => state.genres);
+  const [nameFilter, setNameFilter] = useState();
+  const [order, setOrder] = useState("");
+
+  //Paginado:
+  const [currentPage, setCurrentPage] = useState(1);
+  const [videogamesPerPage, setVideogamesPerPage] = useState(15);
+  const lastVideogameIndex = currentPage * videogamesPerPage; //el ultimo videogame mostrado de la pagina
+  const firstVideogameIndex = lastVideogameIndex - videogamesPerPage; //el primer videogame mostrado de la pagina
+  const currentVideogames = allVideogames.slice(firstVideogameIndex, lastVideogameIndex); // 0--slice--14(15)  15--slice--29(30)
+
+  // Cuando ejecuto el paginado, todos los indices de arriba se modifican gracias a que se cambió de página (currentPage)
+  const paginado = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   //Cuando mi componente se monte, quiero despachar las actions para que mi estado tenga los videogames y genres de la API y DB:
   useEffect(() => {
@@ -25,14 +43,34 @@ const Home = () => {
     dispatch(getVideogames());
   };
 
-  const genres = () => {
-    dispatch(getGenres());
+  const handleFilterByGenre = (e) => {
+    e.preventDefault();
+    dispatch(filterVideogamesByGenre(e.target.value));
   };
-  const numeros = [1, 2, 3, 4, 5];
+
+  const handleFilterByCreator = (e) => {
+    e.preventDefault();
+    dispatch(filterVideogamesByCreator(e.target.value));
+  };
+
+  const handleOrderByName = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    if (e.target === ("A-Z" || "Z-A")) {
+      dispatch(orderByName(value, "name"));
+    } else {
+      dispatch(orderByName(value, "rating"));
+    }
+    setCurrentPage(1);
+    //tengo que modificar un estado para que se vuelvan a renderizar los videogames, si no no se renderizan
+    setOrder(`Order ${e.target.value}`);
+  };
+
   return (
     <div>
       <Link to="/videogame"> Post videogame </Link>
       <h1>AGUANTEN LOS JUEGUITOS</h1>
+      <input type="text" value={nameFilter} placeholder="Videogame filter..." />
       <button
         onClick={(e) => {
           handleOnClick(e);
@@ -40,30 +78,46 @@ const Home = () => {
       >
         Reload videogames
       </button>
-      <div className="Filters">
-        <select className="names">
-          <option value="Ascendant">Ascendant</option>
-          <option value="Descendant">Descendant</option>
-        </select>
-        <select className="genres">
-          {allGenres.map((genre) => (
-            <option key={genre}>{genre}</option>
-          ))}
-        </select>
+      <div className="sorts">
+        <div className="name-rating">
+          <select onChange={(e) => handleOrderByName(e)}>
+            <option value="A-Z">A-Z</option>
+            <option value="Z-A">Z-A</option>
+            <option value="0-5">0-5</option>
+            <option value="5-0">5-0</option>
+          </select>
+          <select onChange={(e) => handleFilterByGenre(e)}>
+            {allGenres.map((genre, index) => (
+              <option key={index} value={genre}>
+                {genre}
+              </option>
+            ))}
+          </select>
+          <select onChange={(e) => handleFilterByCreator(e)}>
+            <option value="api">API games</option>
+            <option value="user">User games</option>
+          </select>
+        </div>
       </div>
-      {allVideogames?.map((videogame, index) => {
-        //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
-        let parsedGenres = videogame.genres;
-        if (videogame.createdInDB) {
-          console.log("before: ", parsedGenres);
-          parsedGenres = parsedGenres.map((genre) => genre.name);
-          console.log("after: ", parsedGenres);
-        }
-        return <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />;
-      })}
-      {/* {allGenres.map((genre) => (
-            <div>{genre}</div>
-          ))} */}
+
+      <Paginado
+        videogamesPerPage={videogamesPerPage}
+        videogamesAmount={allVideogames.length}
+        paginado={paginado}
+      ></Paginado>
+
+      <div className="videogames_area">
+        {currentVideogames?.map((videogame, index) => {
+          //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
+          let parsedGenres = videogame.genres;
+          if (videogame.createdInDB) {
+            //console.log("before: ", parsedGenres);
+            parsedGenres = parsedGenres.map((genre) => genre.name);
+            //console.log("after: ", parsedGenres);
+          }
+          return <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />;
+        })}
+      </div>
     </div>
   );
 };

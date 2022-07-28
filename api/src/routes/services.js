@@ -18,9 +18,10 @@ const getApiInfo = async () => {
   //voy a poner todo en minúscula para evitar futuros problemas
   return response.data.results.map((game) => ({
     id: game.id,
-    name: game.name.toLowerCase(),
+    name: game.name,
     image: game.background_image,
-    genres: game.genres.map((genre) => genre.name.toLowerCase()),
+    genres: game.genres.map((genre) => genre.name),
+    rating: game.rating,
   }));
 };
 
@@ -102,7 +103,7 @@ const listVideogames = async (req, res) => {
 
     //si me pasaron un name por query, entonces voy a devolver los primeros 15 videogames que contengan ese nombre
     if (name) {
-      let videogame = await videogames.filter((game) => game.name.toLowerCase().includes(name.toLowerCase())); //tendré que hacer un await para videogames?
+      let videogame = await videogames.filter((game) => game.name.toLowerCase().includes(name.toLowerCase()));
       videogame = videogame.slice(0, 15);
       //veo si existe un videogame con ese name:
       videogame[0]

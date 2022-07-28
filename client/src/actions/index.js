@@ -4,6 +4,9 @@ import axios from "axios";
 export const actionTypes = {
   getVideogames: "getVideogames",
   getGenres: "getGenres",
+  filterByGenre: "filterByGenre",
+  filterByCreator: "filterByCreator",
+  orderByName: "orderByName",
 };
 
 // Aca sucede la conección entre el front y el back
@@ -25,5 +28,31 @@ export const getGenres = () => {
       type: actionTypes.getGenres,
       payload: json.data,
     });
+  };
+};
+
+// La lógica la hago en el reducer o el componente, no acá
+// payload puede ser cualquier genre
+export const filterVideogamesByGenre = (genre) => {
+  return {
+    type: actionTypes.filterByGenre,
+    payload: genre,
+  };
+};
+
+export const filterVideogamesByCreator = (creator) => {
+  return {
+    type: actionTypes.filterByCreator,
+    payload: creator,
+  };
+};
+
+// Recibo un orderType, asc o desc y compareProp es la propiedad la cual voy a comparar, ya sea name o rating
+export const orderByName = (orderType, compareProp) => {
+  console.log("Ejecuta action orderByName con: ", orderType);
+  console.log("orderType:", orderType, "compareProp:", compareProp);
+  return {
+    type: actionTypes.orderByName,
+    payload: [orderType, compareProp],
   };
 };
