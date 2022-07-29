@@ -7,6 +7,8 @@ export const actionTypes = {
   filterByGenre: "filterByGenre",
   filterByCreator: "filterByCreator",
   orderByName: "orderByName",
+  filterVideogamesByName: "filterVideogamesByName",
+  createVideogame: "createVideogame",
 };
 
 // Aca sucede la conección entre el front y el back
@@ -55,12 +57,48 @@ export const orderByName = (orderType, compareProp) => {
   };
 };
 
-export const getVideogamesNames = () => {
+export const filterVideogamesByName = (name) => {
+  //console.log("action/busco juegos con:", name);
+  return {
+    type: actionTypes.filterVideogamesByName,
+    payload: name,
+  };
+};
+
+// details es un objeto con todas las propiedades, tiene una prop de tipo Date
+/* export const createVideogame = (details) => {
+  console.log("ACTION", details);
   return async function (dispatch) {
-    var json = await axios.get(`http://localhost:3001/genres`);
+    const json = await axios.post("http://localhost:3001/videogames", details); //HACER PARSE DEL DATE
+    console.log(json);
+    return json;
+  };
+}; */
+
+export function createVideogame(payload) {
+  console.log("PAYLOAD DE POSTPOKEMONS", payload);
+  return async function (dispatch) {
+    try {
+      console.log("Before");
+      const creado = await axios.post("http://localhost:3001/videogames", payload);
+      console.log("After");
+
+      return creado;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  };
+}
+
+/*
+export const getVideogames = () => {
+  return async function (dispatch) {
+    var json = await axios.get(`http://localhost:3001/videogames`);
     return dispatch({
-      type: actionTypes.getGenres,
+      type: actionTypes.getVideogames,
       payload: json.data,
     });
   };
 };
+*/

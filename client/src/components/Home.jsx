@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Card from "./Card";
 import Paginado from "./Paginado";
-import { getVideogames } from "../actions";
-import { getGenres } from "../actions";
-import { filterVideogamesByGenre } from "../actions";
-import { filterVideogamesByCreator } from "../actions";
-import { orderByName } from "../actions";
+import { getVideogames, getGenres, filterVideogamesByGenre, filterVideogamesByCreator } from "../actions";
+import { orderByName, filterVideogamesByName } from "../actions";
 
 const Home = () => {
   // Para poder hacer dispatch de mis actions uso:
@@ -16,7 +13,7 @@ const Home = () => {
   // Por que hago esto y no uso con dispatch la action que me trae los videogames?
   const allVideogames = useSelector((state) => state.videogames);
   const allGenres = useSelector((state) => state.genres);
-  const [nameFilter, setNameFilter] = useState();
+  const [nameFilter, setNameFilter] = useState("");
   const [order, setOrder] = useState("");
 
   //Paginado:
@@ -38,7 +35,7 @@ const Home = () => {
   }, []);
   //Todo lo de arriba reemplazaría al mapDispatchToProps y toState de los componentes declase
 
-  const handleOnClick = (e) => {
+  const handleReloadVideogames = (e) => {
     e.preventDefault();
     //necesito volver a la pagina 1 porque si estoy en otra y hay pocos juegos creados, no me los va a mostrar porque hay solo 1 pagina
     setCurrentPage(1);
@@ -70,18 +67,38 @@ const Home = () => {
     setOrder(`Order ${e.target.value}`);
   };
 
+  const handleSearchGame = () => {
+    if (nameFilter !== "") {
+      setCurrentPage(1);
+      dispatch(filterVideogamesByName(nameFilter));
+      setNameFilter("");
+    }
+  };
+
   return (
     <div>
-      <Link to="/videogame"> Post videogame </Link>
+      <Link to="/create"> Post a videogame </Link>
+
       <h1>AGUANTEN LOS JUEGUITOS</h1>
-      <input type="text" value={nameFilter} placeholder="Videogame filter..." />
+
       <button
         onClick={(e) => {
-          handleOnClick(e);
+          handleReloadVideogames(e);
         }}
       >
         Reload videogames
       </button>
+
+      <div>
+        <input
+          type="text"
+          value={nameFilter}
+          placeholder="Videogame filter..."
+          onChange={(e) => setNameFilter(e.target.value)}
+        />
+        <button onClick={() => handleSearchGame()}>Search Game</button>
+      </div>
+
       <div className="sorts">
         <div className="name-rating">
           <select onChange={(e) => handleOrderByName(e)}>

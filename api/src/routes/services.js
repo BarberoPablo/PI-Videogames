@@ -79,7 +79,6 @@ const getGenres = async () => {
     });
     return genre.name;
   });
-  console.log("GENEROS: ", genres);
   return genres;
 };
 */
@@ -170,7 +169,9 @@ const videogameDetails = async (req, res) => {
 
 const createVideogame = async (req, res) => {
   try {
-    const { name, description, released, rating, platforms, createdInDB, genre } = req.body;
+    let { name, description, released, rating, platforms, createdInDB, genres } = req.body;
+    released = released.replace("-", "/");
+
     if (!name || !description || !platforms) throw new Error("Missing data");
     // Usando "getGenres" voy a traerme los genres de la API hacia mi DB si es que ya no lo hice antes:
     const dbGenres = await getGenres();
@@ -186,15 +187,15 @@ const createVideogame = async (req, res) => {
     // Ya tengo todos los genres en mi DB al usar getGenres(), ahora solo falta buscar el genre
     //  que me pasan por body y vincularlo con el videogame, recordemos que "getGenres()" devuelve un array:
     const videogameGenres = await Genre.findAll({
-      where: { name: genre },
+      where: { name: genres },
     });
     //voy a intentar hacer pushs
     videogameGenres.forEach((genre) => {
       newVideogame.addGenre(genre);
     });
-
     //newVideogame.addGenre(videogameGenres); //metodo add de sequelize
     //res.status(201).send("Videogame created successfully");
+
     res.status(201).json(newVideogame);
   } catch (error) {
     res.status(404).send(error.message);

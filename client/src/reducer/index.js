@@ -25,10 +25,10 @@ const rootReducer = (state = initialState, action) => {
 
     case actionTypes.filterByGenre: {
       const allVideogames = state.immutableVideogames;
-      console.log("genres action.payload", action.payload);
+      //console.log("genres action.payload", action.payload);
       const videogamesByGenres = allVideogames.filter((videogame) => videogame.genres.includes(action.payload));
       //console.log("filtrados:", videogamesByGenres);
-      console.log("allVideogames:", allVideogames);
+      //console.log("allVideogames:", allVideogames);
       return {
         ...state,
         videogames: videogamesByGenres, //immutableVideogames nunca lo modifico, lo uso como auxiliar
@@ -49,15 +49,10 @@ const rootReducer = (state = initialState, action) => {
       //unifico las comparaciones ascendentes y descendentes por rating o name
       const sortType = action.payload[0];
       const compareProp = action.payload[1];
-      console.log("reducer compareProp", compareProp);
-      console.log("reducer compareProp az za 50 05", action.payload[0]);
       let sortedVideogames = [];
       if (sortType === "A-Z" || sortType === "0-5") {
-        console.log("entre a ascendente");
         sortedVideogames = state.videogames.sort(function (a, b) {
-          //console.log("a.compareProp", a[compareProp]);
           if (a[compareProp] > b[compareProp]) {
-            console.log(a[compareProp] > b[compareProp]);
             return 1;
           }
           if (b[compareProp] > a[compareProp]) {
@@ -66,7 +61,6 @@ const rootReducer = (state = initialState, action) => {
           return 0;
         });
       } else {
-        console.log("entre a decendente");
         sortedVideogames = state.videogames.sort(function (a, b) {
           if (a[compareProp] > b[compareProp]) {
             return -1;
@@ -78,43 +72,27 @@ const rootReducer = (state = initialState, action) => {
           return 0;
         });
       }
-      sortedVideogames.map((v) => {
-        //console.log(v.name);
-        console.log(v.rating);
-      });
       return {
         ...state,
         videogames: sortedVideogames,
       };
     }
-    /* case actionTypes.orderByName: {
-      let sortedVideogames =
-        action.payload === "A-Z"
-          ? state.videogames.sort(function (a, b) {
-              if (a.name > b.name) {
-                return 1;
-              }
-              if (b.name > a.name) {
-                return -1;
-              }
-              return 0;
-            })
-          : state.videogames.sort(function (a, b) {
-              if (a.name > b.name) {
-                return -1;
-              }
 
-              if (b.name > a.name) {
-                return 1;
-              }
-              return 0;
-            });
-
+    case actionTypes.filterVideogamesByName: {
+      //console.log("reducer/busco juegos con:", action.payload);
+      const videogames = state.immutableVideogames;
+      let videogamesFiltered = videogames.filter((videogame) => {
+        //console.log("nombre del videogame", videogame.name.toLowerCase());
+        return videogame.name.toLowerCase().includes(action.payload.toLowerCase());
+      });
+      //console.log("videojuegos before", videogamesFiltered);
+      videogamesFiltered = videogamesFiltered.slice(0, 15);
+      //console.log("videojuegos after", videogamesFiltered);
       return {
         ...state,
-        videogames: sortedVideogames,
+        videogames: videogamesFiltered,
       };
-    } */
+    }
 
     default:
       return state;
