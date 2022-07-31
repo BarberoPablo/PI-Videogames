@@ -30,6 +30,9 @@ module.exports = (sequelize) => {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
     //Para ahorrar tiempo de busqueda, creo una propiedad la cual solo van a tener los elementos creados en la base de datos y no en la API,
     //  esto va a ayudar a encontrar mas rápido el elemento y para no ir a buscarlo a la API
     createdInDB: {

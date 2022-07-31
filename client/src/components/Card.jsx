@@ -8,7 +8,7 @@ const Card = ({ name, genres, image }) => {
       {genres?.map((genre, index) => (
         <h3 key={index}>{genre}</h3>
       ))}
-      <img src={image} alt="videogame" width="400px" height="200px" />
+      <img src={image} alt="videogame" width="350px" height="268px" />
     </div>
   );
 };

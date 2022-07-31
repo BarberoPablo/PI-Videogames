@@ -4,7 +4,7 @@ import React from "react";
  *
  * @param {videogamesPerPage} videogamesPerPage videojuegos por página
  * @param {videogamesAmount} videogamesAmount cantidad total de videogames
- * @param {paginado} paginado cambio el numero de pagina
+ * @param {paginado} paginado funcion para cambiar de pagina
  */
 export default function Paginado({ videogamesPerPage, videogamesAmount, paginado }) {
   const pageNumbers = [];

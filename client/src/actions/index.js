@@ -9,6 +9,7 @@ export const actionTypes = {
   orderByName: "orderByName",
   filterVideogamesByName: "filterVideogamesByName",
   createVideogame: "createVideogame",
+  getDetails: "getDetails",
 };
 
 // Aca sucede la conección entre el front y el back
@@ -58,7 +59,6 @@ export const orderByName = (orderType, compareProp) => {
 };
 
 export const filterVideogamesByName = (name) => {
-  //console.log("action/busco juegos con:", name);
   return {
     type: actionTypes.filterVideogamesByName,
     payload: name,
@@ -67,25 +67,31 @@ export const filterVideogamesByName = (name) => {
 
 // details es un objeto con todas las propiedades, tiene una prop de tipo Date
 /* export const createVideogame = (details) => {
-  console.log("ACTION", details);
   return async function (dispatch) {
     const json = await axios.post("http://localhost:3001/videogames", details); //HACER PARSE DEL DATE
-    console.log(json);
     return json;
   };
 }; */
 
 export function createVideogame(payload) {
-  console.log("PAYLOAD DE POSTPOKEMONS", payload);
-  return async function (dispatch) {
+  return async function () {
     try {
-      console.log("Before");
       const creado = await axios.post("http://localhost:3001/videogames", payload);
-      console.log("After");
-
       return creado;
     } catch (error) {
-      console.log(error.message);
+      return error.message;
+    }
+  };
+}
+export function getDetails(id) {
+  return async function (dispatch) {
+    try {
+      var json = await axios.get(`http://localhost:3001/videogame/${id}`);
+      return dispatch({
+        type: actionTypes.getDetails,
+        payload: json.data,
+      });
+    } catch (error) {
       return error.message;
     }
   };

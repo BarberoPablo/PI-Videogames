@@ -4,6 +4,7 @@ const initialState = {
   immutableVideogames: [],
   videogames: [],
   genres: [],
+  videogameDetails: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -25,10 +26,7 @@ const rootReducer = (state = initialState, action) => {
 
     case actionTypes.filterByGenre: {
       const allVideogames = state.immutableVideogames;
-      //console.log("genres action.payload", action.payload);
       const videogamesByGenres = allVideogames.filter((videogame) => videogame.genres.includes(action.payload));
-      //console.log("filtrados:", videogamesByGenres);
-      //console.log("allVideogames:", allVideogames);
       return {
         ...state,
         videogames: videogamesByGenres, //immutableVideogames nunca lo modifico, lo uso como auxiliar
@@ -79,18 +77,20 @@ const rootReducer = (state = initialState, action) => {
     }
 
     case actionTypes.filterVideogamesByName: {
-      //console.log("reducer/busco juegos con:", action.payload);
       const videogames = state.immutableVideogames;
       let videogamesFiltered = videogames.filter((videogame) => {
-        //console.log("nombre del videogame", videogame.name.toLowerCase());
         return videogame.name.toLowerCase().includes(action.payload.toLowerCase());
       });
-      //console.log("videojuegos before", videogamesFiltered);
       videogamesFiltered = videogamesFiltered.slice(0, 15);
-      //console.log("videojuegos after", videogamesFiltered);
       return {
         ...state,
         videogames: videogamesFiltered,
+      };
+    }
+    case actionTypes.getDetails: {
+      return {
+        ...state,
+        videogameDetails: action.payload,
       };
     }
 

@@ -22,18 +22,20 @@ const CreateVideogame = () => {
 
   useEffect(() => {
     dispatch(getGenres());
-  }, []);
+  }, [dispatch]);
 
   const [details, setDetails] = useState({
-    name: undefined,
-    description: undefined,
-    released: undefined,
-    rating: undefined,
+    name: "",
+    image:
+      "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmlkZW8lMjBnYW1lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+    description: "",
+    released: "",
+    rating: "",
     platforms: [],
     genres: [],
   });
 
-  const [videogamesPlatforms, setVideogamesPlatforms] = useState([
+  const videogamesPlatforms = [
     "PC",
     "PlayStation5",
     "PlayStation4",
@@ -41,20 +43,17 @@ const CreateVideogame = () => {
     "Xbox 360",
     "Nintendo Switch",
     "Android",
-  ]);
+  ];
 
   const handleFormChange = (e) => {
     setDetails({
       ...details,
       [e.target.name]: e.target.value, //accedo con [] porque necesito el valor de id, si no lo pongo me toma literal "e.target.value"
     });
-    //console.log("Details:", details);
   };
 
   const handleCheckbox = (e) => {
-    //console.log("se clickeo:", e.target.name);
     if (e.target.checked) {
-      //console.log("Se tildó");
       setDetails({
         ...details,
         platforms: [...details.platforms, e.target.name], //cambio su valor cada vez que toca la checkbox, luego solo me traigo los true al crear el videogame
@@ -65,13 +64,11 @@ const CreateVideogame = () => {
         platforms: details.platforms?.filter((platform) => platform !== e.target.name), //cambio su valor cada vez que toca la checkbox, luego solo me traigo los true al crear el videogame
       });
     }
-    //console.log("Detalles:", details);
   };
 
   const handleGenres = (e) => {
     e.preventDefault();
     const genre = e.target.value;
-    //console.log("handleGenres:", genre);
     if (!details.genres.includes(genre)) {
       setDetails({
         ...details,
@@ -82,13 +79,14 @@ const CreateVideogame = () => {
 
   const handleCreateVideogame = (e) => {
     e.preventDefault();
-    console.log("Create details,", details);
     dispatch(createVideogame(details));
     setDetails({
-      name: undefined,
-      description: undefined,
-      released: undefined,
-      rating: undefined,
+      name: "",
+      image:
+        "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmlkZW8lMjBnYW1lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      description: "",
+      released: "",
+      rating: "",
       platforms: [],
       genres: [],
     });
@@ -185,7 +183,7 @@ const CreateVideogame = () => {
         </div>
 
         {/*Este boton dispara el onSubmit:*/}
-        <button type="submit">BUSCAR </button>
+        <button type="submit">Create</button>
       </form>
     </div>
   );

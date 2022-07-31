@@ -120,8 +120,9 @@ const listVideogames = async (req, res) => {
 // incluir generos asociados
 
 const videogameDetails = async (req, res) => {
-  const { idVideogame } = req.params;
   try {
+    const { idVideogame } = req.params;
+    //Diferencio entre videogames de API y DB porque los de DB tienen genres con otro formato
     if (isNaN(idVideogame)) {
       //es uno de mi DB, ya que yo uso un hash alfanumerico en el id
       const videogameDetails = await Videogame.findOne({
@@ -134,24 +135,13 @@ const videogameDetails = async (req, res) => {
           },
         },
       });
-
-      /*
-      return await Videogame.findAll({
-    include: {
-      model: Genre,
-      attributes: ["name"], //el id lo trae solo
-      through: {
-        attributes: [],
-      },
-    },
-  });
-  */
       res.status(200).json(videogameDetails);
     } else {
       const detailsRequest = await axios.get(
         `https://api.rawg.io/api/games/${idVideogame}?key=1c2e5616d523474c8d03ab478ccd169e`
       );
       const videogameDetails = {
+        name: detailsRequest.data.name,
         description: detailsRequest.data.description,
         image: detailsRequest.data.background_image,
         platforms: detailsRequest.data.parent_platforms,
@@ -169,12 +159,12 @@ const videogameDetails = async (req, res) => {
 
 const createVideogame = async (req, res) => {
   try {
-    let { name, description, released, rating, platforms, createdInDB, genres } = req.body;
+    let { name, description, released, rating, platforms, image, createdInDB, genres } = req.body;
     released = released.replace("-", "/");
 
     if (!name || !description || !platforms) throw new Error("Missing data");
     // Usando "getGenres" voy a traerme los genres de la API hacia mi DB si es que ya no lo hice antes:
-    const dbGenres = await getGenres();
+    const dbGenres = await getGenres(); //Sacarlo
     // Creemos el videogame:
     const newVideogame = await Videogame.create({
       name,
@@ -182,14 +172,17 @@ const createVideogame = async (req, res) => {
       released,
       rating,
       platforms,
+      image,
       createdInDB, //viene por dafault, no se la tengo que pasar en Postman
     });
-    // Ya tengo todos los genres en mi DB al usar getGenres(), ahora solo falta buscar el genre
-    //  que me pasan por body y vincularlo con el videogame, recordemos que "getGenres()" devuelve un array:
+    // Ya tengo todos los genres en mi DB al usar getGenres() ESTO SE EJECUTO SOLO MAS ARRIBA,
+    //  ahora solo falta buscar el genre que me pasan por body y vincularlo con el videogame,
+    //  recordemos que "getGenres()" devuelve un array:
+    // Busco los genres que me pasaron, en mi DB de genres y los genres válidos los guardo en videogameGenres
     const videogameGenres = await Genre.findAll({
       where: { name: genres },
     });
-    //voy a intentar hacer pushs
+    // Recorro los genres válidos y se los agrego al newVideogame
     videogameGenres.forEach((genre) => {
       newVideogame.addGenre(genre);
     });

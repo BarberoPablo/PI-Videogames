@@ -32,7 +32,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(getVideogames());
     dispatch(getGenres());
-  }, []);
+  }, [dispatch]);
   //Todo lo de arriba reemplazaría al mapDispatchToProps y toState de los componentes declase
 
   const handleReloadVideogames = (e) => {
@@ -132,11 +132,13 @@ const Home = () => {
           //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
           let parsedGenres = videogame.genres;
           if (videogame.createdInDB) {
-            //console.log("before: ", parsedGenres);
             parsedGenres = parsedGenres.map((genre) => genre.name);
-            //console.log("after: ", parsedGenres);
           }
-          return <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />;
+          return (
+            <Link key={index} to={`/detail/${videogame.id}`}>
+              <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />
+            </Link>
+          );
         })}
       </div>
     </div>
@@ -144,21 +146,3 @@ const Home = () => {
 };
 
 export default Home;
-/*
-        <select className="genres">
-          {console.log("VACIO?: ", genres())}
-          {genres()?.map((genre) => (
-            <option value={genre.name}>asd</option>
-          ))}
-        </select>
-        {allVideogames?.map((videogame, index) => {
-          //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
-          let parsedGenres = videogame.genres;
-          if (videogame.createdInDB) {
-            //console.log("parsedGenres before:", parsedGenres);
-            parsedGenres = parsedGenres.map((genre) => genre.name);
-            //console.log("parsedGenres after:", parsedGenres);
-          }
-          return <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />;
-        })}
-*/
