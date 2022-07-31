@@ -126,7 +126,7 @@ const videogameDetails = async (req, res) => {
     if (isNaN(idVideogame)) {
       //es uno de mi DB, ya que yo uso un hash alfanumerico en el id
       const videogameDetails = await Videogame.findOne({
-        Where: { id: idVideogame },
+        where: { id: idVideogame },
         include: {
           model: Genre,
           attributes: ["name"], //el id lo trae solo
