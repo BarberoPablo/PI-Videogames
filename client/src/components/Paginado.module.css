@@ -1,0 +1,24 @@
+.nume {
+  float: left;
+
+  border-radius: 30px;
+  margin-top: 10px;
+  margin-left: 100px;
+  width: 50px;
+  height: 20px;
+  background-color: rgb(50, 3, 46);
+  color: rgb(213, 210, 220);
+
+}
+
+.nume:hover {
+  transform: scale(1.1);
+  background-color: rgb(172, 81, 134);
+  color: rgb(213, 210, 220);
+
+}
+
+.lista {
+  list-style: none;
+
+}

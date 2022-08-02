@@ -24,9 +24,11 @@ const Card = ({ name, genres, image, id, createdInDB, setOrder }) => {
           <div className={styles.name}>
             <h3>{name}</h3>
           </div>
-          <div className={styles.genres}>
+          <div>
             {genres?.map((genre, index) => (
-              <button key={index}>{genre}</button>
+              <button className={styles.genres} key={index}>
+                {genre}
+              </button>
             ))}
           </div>
         </div>

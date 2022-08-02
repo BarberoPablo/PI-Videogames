@@ -10,6 +10,8 @@
 } */
 
 .card {
+  position: relative;
+
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(3, 1fr);
@@ -49,12 +51,14 @@
 
 .name {
   grid-area: 1 / 1 / 2 / 2;
+  position: absolute;
 }
 
 .genres {
   grid-area: 3 / 1 / 4 / 2;
-  display: flex;
-  flex-direction: row;
+  position: absolute;
+
+
 
 
 }

@@ -10,15 +10,21 @@ const { Genre, Videogame } = require("../db");
 
 // Funcion para traerme la informacion de la API:
 const getApiInfo = async () => {
-  const response = await axios.get("https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e");
-  //results son los juegos
-  //voy a traerme ciertas caracteristicas, no todo
-  //voy a poner todo en minúscula para evitar futuros problemas
-  return response.data.results.map((game) => ({
+  const apiUrl = "https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e&page_size=40&page=";
+  let toReturn = [];
+  const apiUrl2 = await axios.get("https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e&page_size=100");
+
+  // .results accede a los videogames, accedo a las primeras 3 paginas de videogames:
+  await Promise.all([axios.get(apiUrl + 1), axios.get(apiUrl + 2), axios.get(apiUrl + 3)]).then((responses) => {
+    toReturn = responses[0].data.results.concat(responses[1].data.results).concat(responses[2].data.results);
+  });
+
+  //voy a traerme ciertas caracteristicas de los videogames, no todo:
+  return toReturn.map((game) => ({
     id: game.id,
     name: game.name,
     image: game.background_image,
-    genres: game.genres.map((genre) => genre.name),
+    genres: game.genres?.map((genre) => genre.name),
     rating: game.rating,
   }));
 };
