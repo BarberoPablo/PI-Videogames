@@ -1,10 +1,11 @@
 import { React, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, History } from "react-router-dom";
 import Card from "./Card";
 import Paginado from "./Paginado";
 import { getVideogames, getGenres, filterVideogamesByGenre, filterVideogamesByCreator } from "../actions";
-import { orderByName, filterVideogamesByName } from "../actions";
+import { orderByName, filterVideogamesByName, deleteVideogame } from "../actions";
+import styles from "./Home.module.css";
 
 const Home = () => {
   // Para poder hacer dispatch de mis actions uso:
@@ -16,13 +17,16 @@ const Home = () => {
   const [nameFilter, setNameFilter] = useState("");
   const [order, setOrder] = useState("");
 
+  const mainGame = allVideogames[1];
+  const sideVideogame1 = allVideogames[0];
+  const sideVideogame2 = allVideogames[2];
+
   //Paginado:
   const [currentPage, setCurrentPage] = useState(1);
   const [videogamesPerPage, setVideogamesPerPage] = useState(15);
   const lastVideogameIndex = currentPage * videogamesPerPage; //el ultimo videogame mostrado de la pagina
   const firstVideogameIndex = lastVideogameIndex - videogamesPerPage; //el primer videogame mostrado de la pagina
   const currentVideogames = allVideogames.slice(firstVideogameIndex, lastVideogameIndex); // 0--slice--14(15)  15--slice--29(30)
-
   // Cuando ejecuto el paginado, todos los indices de arriba se modifican gracias a que se cambió de página (currentPage)
   const paginado = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -76,69 +80,111 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Link to="/create"> Post a videogame </Link>
+    <div className={styles.parent}>
+      <div className={styles.navBar}>
+        <h1 className={styles.title}>AGUANTEN LOS JUEGUITOS</h1>
+        <Link to="/create">
+          <img
+            className={styles.postVideogame}
+            src="https://thumbs.gfycat.com/PowerfulOldfashionedConure.webp"
+            alt="post image"
+          />
+          Post a videogame
+        </Link>
+        <div>
+          <span
+            className={styles.reload}
+            onClick={(e) => {
+              handleReloadVideogames(e);
+            }}
+          >
+            &#x21bb;
+          </span>
 
-      <h1>AGUANTEN LOS JUEGUITOS</h1>
+          <input
+            type="text"
+            value={nameFilter}
+            placeholder="Videogame filter..."
+            onChange={(e) => setNameFilter(e.target.value)}
+          />
+          <button onClick={() => handleSearchGame()}>Search Game</button>
+        </div>
 
-      <button
-        onClick={(e) => {
-          handleReloadVideogames(e);
-        }}
-      >
-        Reload videogames
-      </button>
-
-      <div>
-        <input
-          type="text"
-          value={nameFilter}
-          placeholder="Videogame filter..."
-          onChange={(e) => setNameFilter(e.target.value)}
-        />
-        <button onClick={() => handleSearchGame()}>Search Game</button>
-      </div>
-
-      <div className="sorts">
-        <div className="name-rating">
-          <select onChange={(e) => handleOrderByName(e)}>
+        <div>
+          <select className="name-rating" onChange={(e) => handleOrderByName(e)}>
             <option value="A-Z">A-Z</option>
             <option value="Z-A">Z-A</option>
             <option value="0-5">0-5</option>
             <option value="5-0">5-0</option>
           </select>
-          <select onChange={(e) => handleFilterByGenre(e)}>
+          <select className="genres" onChange={(e) => handleFilterByGenre(e)}>
             {allGenres.map((genre, index) => (
               <option key={index} value={genre}>
                 {genre}
               </option>
             ))}
           </select>
-          <select onChange={(e) => handleFilterByCreator(e)}>
+          <select className="api-user" onChange={(e) => handleFilterByCreator(e)}>
             <option value="api">API games</option>
             <option value="user">User games</option>
           </select>
         </div>
+        <Paginado
+          videogamesPerPage={videogamesPerPage}
+          videogamesAmount={allVideogames.length}
+          paginado={paginado}
+        ></Paginado>
       </div>
 
-      <Paginado
-        videogamesPerPage={videogamesPerPage}
-        videogamesAmount={allVideogames.length}
-        paginado={paginado}
-      ></Paginado>
+      <div className={styles.mainVideogame}>
+        {/* Tengo que esperar a que mainGame tenga un valor, por eso hago el ternario */}
+        {mainGame ? (
+          <Card name={mainGame.name} image={mainGame.image} genres={mainGame.genres} id={mainGame.id} />
+        ) : (
+          false
+        )}
+      </div>
 
-      <div className="videogames_area">
+      <div className={styles.sideVideogames}>
+        {/* Tengo que esperar a que mainGame tenga un valor, por eso hago el ternario */}
+        {sideVideogame1 ? (
+          <Card
+            name={sideVideogame1.name}
+            image={sideVideogame1.image}
+            genres={sideVideogame1.genres}
+            id={sideVideogame1.id}
+          />
+        ) : (
+          false
+        )}
+        {sideVideogame2 ? (
+          <Card
+            name={sideVideogame2.name}
+            image={sideVideogame2.image}
+            genres={sideVideogame2.genres}
+            id={sideVideogame2.id}
+          />
+        ) : (
+          false
+        )}
+      </div>
+
+      <div className={styles.joker}>Hola</div>
+      <div className={styles.videogames}>
         {currentVideogames?.map((videogame, index) => {
-          //Esta funcion hace un parse de los genres de los videogames creados en la DB ya que tienen distinto formato que los de la API
-          let parsedGenres = videogame.genres;
-          if (videogame.createdInDB) {
-            parsedGenres = parsedGenres.map((genre) => genre.name);
+          if (videogame !== mainGame && videogame !== sideVideogame1 && videogame !== sideVideogame2) {
+            return (
+              <Card
+                setOrder={setOrder}
+                createdInDB={videogame.createdInDB}
+                key={index}
+                name={videogame.name}
+                image={videogame.image}
+                genres={videogame.genres}
+                id={videogame.id}
+              />
+            );
           }
-          return (
-            <Link key={index} to={`/detail/${videogame.id}`}>
-              <Card key={index} name={videogame.name} image={videogame.image} genres={parsedGenres} />
-            </Link>
-          );
         })}
       </div>
     </div>

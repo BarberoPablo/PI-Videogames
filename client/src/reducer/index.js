@@ -10,6 +10,11 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.getVideogames: {
+      // Voy a cambiarle el formato a los genre de los videojuegos creados en DB
+      const videogames = action.payload;
+      videogames.forEach((videogame) => {
+        videogame.genres = videogame.createdInDB ? videogame.genres.map((genre) => genre.name) : videogame.genres;
+      });
       return {
         ...state,
         videogames: action.payload,
@@ -91,6 +96,13 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         videogameDetails: action.payload,
+      };
+    }
+
+    case actionTypes.clearVideogameDetails: {
+      return {
+        ...state,
+        videogameDetails: [],
       };
     }
 

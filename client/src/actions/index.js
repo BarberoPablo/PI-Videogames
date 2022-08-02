@@ -10,6 +10,8 @@ export const actionTypes = {
   filterVideogamesByName: "filterVideogamesByName",
   createVideogame: "createVideogame",
   getDetails: "getDetails",
+  deleteVideogame: "deleteVideogame",
+  clearVideogameDetails: "clearVideogameDetails",
 };
 
 // Aca sucede la conección entre el front y el back
@@ -73,16 +75,6 @@ export const filterVideogamesByName = (name) => {
   };
 }; */
 
-export function createVideogame(payload) {
-  return async function () {
-    try {
-      const creado = await axios.post("http://localhost:3001/videogames", payload);
-      return creado;
-    } catch (error) {
-      return error.message;
-    }
-  };
-}
 export function getDetails(id) {
   return async function (dispatch) {
     try {
@@ -97,14 +89,34 @@ export function getDetails(id) {
   };
 }
 
-/*
-export const getVideogames = () => {
-  return async function (dispatch) {
-    var json = await axios.get(`http://localhost:3001/videogames`);
-    return dispatch({
-      type: actionTypes.getVideogames,
-      payload: json.data,
-    });
+export const clearVideogameDetails = () => {
+  return {
+    type: actionTypes.clearVideogameDetails,
   };
 };
-*/
+
+export function createVideogame(payload) {
+  return async function () {
+    try {
+      console.log("intento hacer el post");
+      const creado = await axios.post("http://localhost:3001/videogames", payload);
+      console.log("post realizado exitosamente");
+      return creado;
+    } catch (error) {
+      console.log("mensaje del back:", error.message);
+      throw new Error(error);
+    }
+  };
+}
+
+export function deleteVideogame(id) {
+  return async function () {
+    try {
+      const response = await axios.delete(`http://localhost:3001/videogame/delete/${id}`);
+      return response;
+    } catch (error) {
+      console.log("action:", error);
+      throw error;
+    }
+  };
+}

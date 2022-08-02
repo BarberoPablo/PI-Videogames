@@ -9,7 +9,7 @@ const router = Router(); */
 const express = require("express");
 const router = express.Router();
 
-const { listVideogames, videogameDetails, createVideogame, listGenres } = require("./services");
+const { listVideogames, videogameDetails, createVideogame, listGenres, deleteVideogame } = require("./services");
 
 router.get("/videogames", listVideogames);
 
@@ -19,6 +19,8 @@ router.get("/videogame/:idVideogame", videogameDetails);
 router.post("/videogames", createVideogame);
 
 router.get("/genres", listGenres);
+
+router.delete("/videogame/delete/:id", deleteVideogame);
 
 // Podría hacer una ruta para usar el filter name y devolver 15 videogames con el nombre que me pase el usuario
 

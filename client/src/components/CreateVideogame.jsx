@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getGenres, createVideogame } from "../actions";
-
+import styles from "./CreateVideogame.module.css";
 /*
 [ ] Un formulario controlado con JavaScript con los siguientes campos:
 Nombre
@@ -77,23 +77,43 @@ const CreateVideogame = () => {
     }
   };
 
-  const handleCreateVideogame = (e) => {
+  const handleCreateVideogame = async (e) => {
     e.preventDefault();
-    dispatch(createVideogame(details));
+    try {
+      // En el back hago el validador del form (en el post videogame)
+      // Uso await porque quiero saber si se hizo con exito post para limpiar los inputs o no
+      console.log(details);
+      await dispatch(createVideogame(details));
+      setDetails({
+        name: "",
+        image:
+          "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmlkZW8lMjBnYW1lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        description: "",
+        released: "",
+        rating: "",
+        platforms: [],
+        genres: [],
+      });
+    } catch (error) {
+      alert("Missing data, name, description, rating (min 0 max 5), platforms and genres are required");
+    }
+  };
+
+  const handleRemoveGenre = (e) => {
+    e.preventDefault();
+    const genreToRemove = e.target.name;
+    console.log("genres:", details.genres);
     setDetails({
-      name: "",
-      image:
-        "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmlkZW8lMjBnYW1lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      description: "",
-      released: "",
-      rating: "",
-      platforms: [],
-      genres: [],
+      ...details,
+      genres: details.genres.filter((genre) => genre !== genreToRemove),
     });
+    console.log("genres:", details.genres);
+    alert(`Genre ${e.target.name} deleted`);
+    //console.log(e.target.name);
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <Link to="/home">
         <button>Go back</button>
       </Link>
@@ -169,7 +189,16 @@ const CreateVideogame = () => {
             ))}
           </select>
           <ul>
-            <li>
+            {details.genres?.map((genre, index) => (
+              <li>
+                <button key={index} name={genre} onClick={(e) => handleRemoveGenre(e)}>
+                  {genre}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {/* <ul>
+            <li onClick={(e) => handleRemoveGenre(e)}>
               {details.genres?.map((genre) => {
                 // La razon es este if es para que se vea mas lindo los guiones
                 if (genre !== details.genres[details.genres.length - 1]) {
@@ -179,7 +208,7 @@ const CreateVideogame = () => {
                 }
               })}
             </li>
-          </ul>
+          </ul> */}
         </div>
 
         {/*Este boton dispara el onSubmit:*/}

@@ -10,9 +10,7 @@ const { Genre, Videogame } = require("../db");
 
 // Funcion para traerme la informacion de la API:
 const getApiInfo = async () => {
-  const response = await axios.get(
-    "https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e&page_size=10000"
-  );
+  const response = await axios.get("https://api.rawg.io/api/games?key=1c2e5616d523474c8d03ab478ccd169e");
   //results son los juegos
   //voy a traerme ciertas caracteristicas, no todo
   //voy a poner todo en minúscula para evitar futuros problemas
@@ -70,18 +68,6 @@ const getGenres = async () => {
   });
   return genres;
 };
-/*
-const getGenres = async () => {
-  const apiGenres = await axios.get("https://api.rawg.io/api/genres?key=1c2e5616d523474c8d03ab478ccd169e");
-  const genres = apiGenres.data.results.map((genre) => {
-    Genre.findOrCreate({
-      where: { name: genre.name },
-    });
-    return genre.name;
-  });
-  return genres;
-};
-*/
 
 // Para poder usar getApiInfo tengo que hacer una funcion anonima, no puedo hacer en el root:
 // (quiero solo llamar una vez a la api asi es más rápido aunque no se va a actualizar si se pone algun juego nuevo en la API)
@@ -161,8 +147,8 @@ const createVideogame = async (req, res) => {
   try {
     let { name, description, released, rating, platforms, image, createdInDB, genres } = req.body;
     released = released.replace("-", "/");
-
-    if (!name || !description || !platforms) throw new Error("Missing data");
+    if (!name || !description || !platforms[0] || !genres[0] || !rating || rating < 0 || rating > 5)
+      throw new Error("Check data: name, description, rating(0-5), platforms and genres are required");
     // Usando "getGenres" voy a traerme los genres de la API hacia mi DB si es que ya no lo hice antes:
     const dbGenres = await getGenres(); //Sacarlo
     // Creemos el videogame:
@@ -204,4 +190,27 @@ const listGenres = async (req, res) => {
   }
 };
 
-module.exports = { listVideogames, videogameDetails, createVideogame, listGenres };
+const deleteVideogame = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (isNaN(id)) {
+      //es uno de mi DB, ya que yo uso un hash alfanumerico en el id
+      const deleteResponse = await Videogame.destroy({
+        where: { id: id },
+      });
+      //actualizo mi DB:
+      getAllVideogames();
+      if (deleteResponse) {
+        return res.status(200).json("Videogame deleted successfully");
+      } else {
+        return res.status(404).send("Videogame not found");
+      }
+    } else {
+      return res.status(404).send("Invalid id");
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+module.exports = { listVideogames, videogameDetails, createVideogame, listGenres, deleteVideogame };

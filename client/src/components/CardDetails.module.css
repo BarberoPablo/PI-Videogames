@@ -1,0 +1,27 @@
+@import url('http://fonts.cdnfonts.com/css/arcade-classic');
+
+
+.conteiner {
+  background-image: url("https://i.pinimg.com/originals/d0/e0/e2/d0e0e259bf0aba4da742bedff1d4b8a5.gif");
+  /* background-repeat: no-repeat; */
+  /* Baja con la slide-bar: */
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
+
+}
+
+.title {
+  font-family: "arcadeclassic";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 3rem;
+
+  color: goldenrod;
+
+}
+
+.coinImg {
+  width: 200px;
+  height: auto;
+}
