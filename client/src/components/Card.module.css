@@ -1,18 +1,11 @@
-/* .card {
-  display: grid;
-
-  width: 450px;
-  height: 300px;
-  align-items: center;
-  justify-items: center;
-  justify-content: center;
-
-} */
-
-.card {
+.conteiner {
   position: relative;
 
-  display: grid;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
@@ -21,21 +14,24 @@
   align-items: center;
   /* cambiar width y heigth */
   width: 100%;
-  height: 100%;
+  /* Espacio entre los videogames */
+  height: 95%;
+  /* Font: */
   font-family: monospace;
+  font-size: 25px;
 }
-
 
 /* background-size: cover; */
 .image {
   grid-area: 1 / 1 / 4 / 2;
+  position: relative;
   object-fit: cover;
   background-size: cover;
   height: 100%;
   width: 100%;
+  border-radius: 30px;
   animation: fadeIn 3s ease
 }
-
 
 @keyframes fadeIn {
   0% {
@@ -52,19 +48,35 @@
 .name {
   grid-area: 1 / 1 / 2 / 2;
   position: absolute;
+
+  font-family: "arcadeclassic";
+
+  margin-top: -30px;
+
+  text-shadow: 2px 0 rgb(50, 3, 46), -2px 0 rgb(50, 3, 46), 0 2px rgb(50, 3, 46), 0 -2px rgb(50, 3, 46),
+    1px 1px rgb(50, 3, 46), -1px -1px rgb(50, 3, 46), 1px -1px rgb(50, 3, 46), -1px 1px rgb(50, 3, 46);
+  color: rgb(221, 221, 221);
 }
 
 .genres {
   grid-area: 3 / 1 / 4 / 2;
   position: absolute;
-
-
-
-
+  display: flex;
+  bottom: 0px;
 }
 
-/* .card img {
-  width: 100%;
-  height: auto;
+.genres button {
+  font-family: "arcadeclassic";
+  height: 10%;
+  width: 10%;
+  right: 0;
+  top: 0;
+}
 
-} */
+.deleteButton {
+  font-family: "arcadeclassic";
+  position: absolute;
+  top: 3%;
+  right: 3%;
+
+}

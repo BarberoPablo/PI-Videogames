@@ -33,25 +33,73 @@
   table-layout: fixed;
 }
 
+/* Main Videogame CSS */
+
 .mainVideogame {
   grid-area: 2 / 1 / 4 / 3;
-  height: fit-content;
-  width: fit-content;
-  align-content: bottom;
+  /* Esto cambia el tamaño del div, no de la imagen sola */
+  width: 900px;
+  height: 500px;
+
+  /* align-content: bottom; */
 }
 
+.mainVideogame img {
+  width: 900px;
+  height: 500px;
+
+}
+
+.mainVideogame button {
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(50, 3, 46);
+  color: rgb(213, 210, 220);
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  /* 
+  font-style: normal;
+  font-weight: 400;
+  font-family: "arcadeclassic";
+
+  color: goldenrod;
+   */
+}
+
+/* Side Videogames CSS */
 
 .sideVideogames {
   grid-area: 2 / 3 / 4 / 4;
-  height: 50%;
+  height: 450px;
   width: auto;
   max-width: 100%;
+  max-height: 100%;
+
 }
 
+.sideVideogames img {
+  width: 95%;
+  height: auto;
+  max-height: 250px;
+}
+
+.sideVideogames button {
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(50, 3, 46);
+  color: rgb(213, 210, 220);
+  font-size: 1.3rem;
+  margin-bottom: 10px
+}
 
 .joker {
   grid-area: 4 / 1 / 5 / 4;
+
 }
+
+/* Rest Videogames CSS */
 
 .videogames {
   grid-area: 5 / 1 / 6 / 4;
@@ -71,104 +119,14 @@
 
 .videogames img {
   max-height: 470px;
-
-
 }
 
-/* .videogames {
-  grid-area: 5 / 1 / 6 / 4;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  grid-template-rows: repeat(4, 1fr);
-
-  grid-column-gap: 5%;
-  grid-row-gap: 5%;
-  width: 90%;
-  height: auto;
-
-  justify-self: center;
-
-  margin-bottom: 30px;
-} */
-
-
-
-/* TODO:
-.parent {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  Para que los divs no ocupen mas lugar del necesario: 
-  grid-template-rows: fit-content(8ch) fit-content(8ch) 5fr;
-  grid-column-gap: 5px;
-  grid-row-gap: 5px;
-  background-image: url("https://i.pinimg.com/originals/d0/e0/e2/d0e0e259bf0aba4da742bedff1d4b8a5.gif");
-   background-repeat: no-repeat;
-  Baja con la slide-bar: 
-  background-attachment: fixed;
-  background-size: cover;
+.videogames button {
+  float: left;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(50, 3, 46);
+  color: rgb(213, 210, 220);
+  font-size: 1.1rem;
 }
-
-.postVideogame {
-  height: 50px;
-  width: auto;
-}
-
-.reload {
-  font-family: Lucida Sans Unicode;
-  height: 100px;
-  width: auto;
-}
-
-.title {
-  color: goldenrod;
-}
-
-.navBar {
-  grid-area: 1 / 1 / 2 / 4;
-   ? 
-  table-layout: fixed;
-}
-
-.mainVideogame {
-  grid-area: 2 / 1 / 4 / 3;
-  height: fit-content;
-  width: fit-content;
-  align-content: bottom;
-}
-
-
-.sideVideogames {
-  grid-area: 2 / 3 / 4 / 4;
-  height: 50%;
-  width: auto;
-  max-width: 100%;
-}
-
-
-.joker {
-  grid-area: 4 / 1 / 5 / 4;
-}
-
-.videogames {
-  grid-area: 5 / 1 / 6 / 4;
-   Pone uno al lado del otro: 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  grid-template-rows: repeat(4, 1fr);
-
-  grid-column-gap: 5%;
-  width: 90%;
-  height: auto;
-
-  justify-self: center;
-   border: 3px solid;
-}
-
-.videogames img {
-  max-height: 470px;
-
-
-}
-*/

@@ -164,6 +164,7 @@ const Home = () => {
         {/* Tengo que esperar a que mainGame tenga un valor, por eso hago el ternario */}
         {topVideogames && topVideogames.mainVideogame ? (
           <Card
+            createdInDB={topVideogames.mainVideogame.createdInDB}
             name={topVideogames.mainVideogame.name}
             image={topVideogames.mainVideogame.image}
             genres={topVideogames.mainVideogame.genres}
@@ -178,6 +179,7 @@ const Home = () => {
         {/* Tengo que esperar a que mainGame tenga un valor, por eso hago el ternario */}
         {topVideogames && topVideogames.sideVideogame1 ? (
           <Card
+            createdInDB={topVideogames.sideVideogame1.createdInDB}
             name={topVideogames.sideVideogame1.name}
             image={topVideogames.sideVideogame1.image}
             genres={topVideogames.sideVideogame1.genres}
@@ -188,6 +190,7 @@ const Home = () => {
         )}
         {topVideogames && topVideogames.sideVideogame2 ? (
           <Card
+            createdInDB={topVideogames.sideVideogame2.createdInDB}
             name={topVideogames.sideVideogame2.name}
             image={topVideogames.sideVideogame2.image}
             genres={topVideogames.sideVideogame2.genres}

@@ -16,23 +16,23 @@ const Card = ({ name, genres, image, id, createdInDB, setOrder }) => {
   };
 
   return (
-    <div>
-      {createdInDB ? <button onClick={() => handleDelete()}>Delete</button> : false}
+    <div className={styles.conteiner}>
       <Link to={`/detail/${id}`}>
         <div className={styles.card}>
           <img className={styles.image} src={image} alt="videogame image" />
           <div className={styles.name}>
             <h3>{name}</h3>
           </div>
-          <div>
+          <div className={styles.genres}>
             {genres?.map((genre, index) => (
-              <button className={styles.genres} key={index}>
-                {genre}
-              </button>
+              <button key={index}>{genre}</button>
             ))}
           </div>
         </div>
       </Link>
+      <div className={styles.deleteButton}>
+        {createdInDB ? <button onClick={() => handleDelete()}>X</button> : false}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.nume {
+.pageNumber {
   float: left;
 
   border-radius: 30px;
@@ -11,14 +11,14 @@
 
 }
 
-.nume:hover {
+.pageNumber:hover {
   transform: scale(1.1);
   background-color: rgb(172, 81, 134);
   color: rgb(213, 210, 220);
 
 }
 
-.lista {
+.list {
   list-style: none;
 
 }
