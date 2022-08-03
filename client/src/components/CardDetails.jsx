@@ -23,18 +23,40 @@ const CardDetails = () => {
     };
   }, [dispatch, idVideogame]);
 
+  const parseDescription = (description) => {
+    let parsed = "";
+    let copiar = true;
+    for (let i = 0; i < description.length; i++) {
+      if (description.charAt(i) === "<") {
+        copiar = false;
+      }
+      if (copiar) {
+        parsed += description.charAt(i);
+      }
+      if (description.charAt(i) === ">") {
+        copiar = true;
+      }
+    }
+    return parsed;
+  };
+
   return videogame && videogame.image ? (
     <div className={styles.conteiner}>
       <Link to="/home">
         <button>Go back</button>
       </Link>
-      <h2>
-        {videogame.name}----------{videogame.rating}
-      </h2>
-      <img src={videogame.image} alt="videogame" width="400px" height="200px" />
-      <p>{videogame.description}</p>
-      <h3>Details</h3>
-      <h4>{videogame.released}</h4>
+      <div className={styles.title}>
+        <h2>{videogame.name}</h2>
+        <h4>{videogame.released}</h4>
+      </div>
+      <div className={styles.title}>
+        <h3>{videogame.rating}/5</h3>
+      </div>
+      <div className={styles.imageAndDescription}>
+        <img src={videogame.image} alt="videogame" width="400px" height="200px" />
+        <p>{parseDescription(videogame.description)}</p>
+      </div>
+      {/* <h3>Details</h3> */}
 
       <div>
         {videogame.platforms?.map((platform, index) => {
@@ -65,7 +87,7 @@ const CardDetails = () => {
       </div>
     </div>
   ) : (
-    <div className={styles.conteiner}>
+    <div className={styles.loadingConteiner}>
       <img
         className={styles.coinImg}
         src="https://i.gifer.com/origin/e0/e02ce86bcfd6d1d6c2f775afb3ec8c01_w200.gif"

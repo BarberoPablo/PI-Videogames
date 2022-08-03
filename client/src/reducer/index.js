@@ -11,7 +11,7 @@ const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.getVideogames: {
       // Voy a cambiarle el formato a los genre de los videojuegos creados en DB
-      const videogames = action.payload;
+      let videogames = action.payload;
       videogames.forEach((videogame) => {
         videogame.genres = videogame.createdInDB ? videogame.genres.map((genre) => genre.name) : videogame.genres;
       });
@@ -52,9 +52,12 @@ const rootReducer = (state = initialState, action) => {
       //unifico las comparaciones ascendentes y descendentes por rating o name
       const sortType = action.payload[0];
       const compareProp = action.payload[1];
+      //const allVideogames = state.immutableVideogames;
+      const allVideogames = state.videogames;
       let sortedVideogames = [];
       if (sortType === "A-Z" || sortType === "0-5") {
-        sortedVideogames = state.videogames.sort(function (a, b) {
+        //Ascendente
+        sortedVideogames = allVideogames.sort(function (a, b) {
           if (a[compareProp] > b[compareProp]) {
             return 1;
           }
@@ -64,7 +67,7 @@ const rootReducer = (state = initialState, action) => {
           return 0;
         });
       } else {
-        sortedVideogames = state.videogames.sort(function (a, b) {
+        sortedVideogames = allVideogames.sort(function (a, b) {
           if (a[compareProp] > b[compareProp]) {
             return -1;
           }

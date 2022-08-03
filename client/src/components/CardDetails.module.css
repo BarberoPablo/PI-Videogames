@@ -7,21 +7,63 @@
   /* Baja con la slide-bar: */
   background-attachment: fixed;
   background-size: cover;
-  height: 100vh;
+  min-height: 100vh;
+}
 
+.loadingConteiner {
+  background-image: url("https://i.pinimg.com/originals/d0/e0/e2/d0e0e259bf0aba4da742bedff1d4b8a5.gif");
+  /* background-repeat: no-repeat; */
+  /* Baja con la slide-bar: */
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
 }
 
 .title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
   font-family: "arcadeclassic";
   font-style: normal;
   font-weight: 400;
   font-size: 3rem;
-
+  text-shadow: 2px 0 rgb(50, 3, 46), -2px 0 rgb(50, 3, 46), 0 2px rgb(50, 3, 46), 0 -2px rgb(50, 3, 46),
+    1px 1px rgb(50, 3, 46), -1px -1px rgb(50, 3, 46), 1px -1px rgb(50, 3, 46), -1px 1px rgb(50, 3, 46);
   color: goldenrod;
+}
 
+.imageAndDescription {
+  display: flex;
+  font-family: "arcadeclassic";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1rem;
+  text-shadow: 2px 0 rgb(50, 3, 46), -2px 0 rgb(50, 3, 46), 0 2px rgb(50, 3, 46), 0 -2px rgb(50, 3, 46),
+    1px 1px rgb(50, 3, 46), -1px -1px rgb(50, 3, 46), 1px -1px rgb(50, 3, 46), -1px 1px rgb(50, 3, 46);
+  color: goldenrod;
 }
 
 .coinImg {
   width: 200px;
   height: auto;
+}
+
+.genres button {
+  font-family: "arcadeclassic";
+  height: 10%;
+  width: 10%;
+  right: 0;
+  top: 0;
+}
+
+.videogames button {
+  float: left;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(50, 3, 46);
+  color: rgb(213, 210, 220);
+  font-size: 1.1rem;
 }

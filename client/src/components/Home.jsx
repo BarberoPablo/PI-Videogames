@@ -27,37 +27,32 @@ const Home = () => {
   const lastVideogameIndex = currentPage * videogamesPerPage; //el ultimo videogame mostrado de la pagina
   const firstVideogameIndex = lastVideogameIndex - videogamesPerPage; //el primer videogame mostrado de la pagina
   const currentVideogames = allVideogames.slice(firstVideogameIndex, lastVideogameIndex); // 0--slice--14(15)  15--slice--29(30)
-
   const [topVideogames, setTopVideogames] = useState();
   const [moreVideogames, setMoreVideogames] = useState();
 
   // Cuando ejecuto el paginado, todos los indices de arriba se modifican gracias a que se cambió de página (currentPage)
   const paginado = (pageNumber) => {
     setCurrentPage(pageNumber);
-    console.log("El paginado se ejecutó con la page:", pageNumber);
   };
 
   //Cuando mi componente se monte, quiero despachar las actions para que mi estado tenga los videogames y genres de la API y DB:
   useEffect(() => {
     dispatch(getVideogames());
     dispatch(getGenres());
-  }, [dispatch]);
+  }, []);
 
   // El motivo de este useEffect es que quiero actualizar mis topVideogames cada vez que se cambia el paginado
   useEffect(() => {
-    if (allVideogames.length >= 3) {
-      setTopVideogames({
-        mainVideogame: currentVideogames[0],
-        sideVideogame1: currentVideogames[1],
-        sideVideogame2: currentVideogames[2],
-      });
-      // Quiero sacar los primeros tres videogames asi no los renderizo en "videogames" (ver .css)
-      setMoreVideogames(currentVideogames.slice(3, 15));
+    setTopVideogames({
+      mainVideogame: currentVideogames[0],
+      sideVideogame1: currentVideogames[1],
+      sideVideogame2: currentVideogames[2],
+    });
+    // Quiero sacar los primeros tres videogames asi no los renderizo en "videogames" (ver .css)
+    setMoreVideogames(currentVideogames.slice(3, 15));
 
-      console.log("topVideogames:", topVideogames);
-      console.log("moreVideogames:", moreVideogames);
-    }
-  }, [allVideogames, currentPage]);
+    //Pongo order para que cuando se modifique el order se rendericen los nuevos videojuegos
+  }, [allVideogames, currentPage, getVideogames, order]);
   //Todo lo de arriba reemplazaría al mapDispatchToProps y toState de los componentes declase
 
   const handleReloadVideogames = (e) => {
@@ -75,8 +70,9 @@ const Home = () => {
 
   const handleFilterByCreator = (e) => {
     e.preventDefault();
-    setCurrentPage(1);
     dispatch(filterVideogamesByCreator(e.target.value));
+    setCurrentPage(1);
+    setOrder(`Order ${e.target.value}`);
   };
 
   const handleOrderByName = (e) => {
@@ -90,6 +86,7 @@ const Home = () => {
     setCurrentPage(1);
     //tengo que modificar un estado para que se vuelvan a renderizar los videogames, si no, no se renderizan otra vez
     setOrder(`Order ${e.target.value}`);
+    console.log("Videogames After:", allVideogames);
   };
 
   const handleSearchGame = () => {
@@ -102,6 +99,7 @@ const Home = () => {
 
   return (
     <div className={styles.parent}>
+      {console.log("Videogames before:", allVideogames)}
       <div className={styles.navBar}>
         <h1 className={styles.title}>AGUANTEN LOS JUEGUITOS</h1>
         <Link to="/create">
@@ -134,6 +132,9 @@ const Home = () => {
 
         <div>
           <select className="name-rating" onChange={(e) => handleOrderByName(e)}>
+            <option selected disabled>
+              Order
+            </option>
             <option value="A-Z">A-Z</option>
             <option value="Z-A">Z-A</option>
             <option value="0-5">0-5</option>
@@ -151,8 +152,11 @@ const Home = () => {
             <option value="user">User games</option>
           </select>
         </div>
+
         <div>
           <Paginado
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
             videogamesPerPage={videogamesPerPage}
             videogamesAmount={allVideogames.length}
             paginado={paginado}
@@ -201,7 +205,7 @@ const Home = () => {
         )}
       </div>
 
-      <div className={styles.joker}>Hola</div>
+      <div className={styles.joker}></div>
       <div className={styles.videogames}>
         {moreVideogames?.map((videogame, index) => {
           return (

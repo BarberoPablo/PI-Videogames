@@ -51,7 +51,7 @@
 
   font-family: "arcadeclassic";
 
-  margin-top: -30px;
+  /*  margin-top: -30px; */
 
   text-shadow: 2px 0 rgb(50, 3, 46), -2px 0 rgb(50, 3, 46), 0 2px rgb(50, 3, 46), 0 -2px rgb(50, 3, 46),
     1px 1px rgb(50, 3, 46), -1px -1px rgb(50, 3, 46), 1px -1px rgb(50, 3, 46), -1px 1px rgb(50, 3, 46);

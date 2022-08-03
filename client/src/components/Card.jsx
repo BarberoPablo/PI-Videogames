@@ -1,18 +1,23 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import styles from "./Card.module.css";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { deleteVideogame, getVideogames } from "../actions";
 
 // Cada personaje debe contener: imagen, nombre. generos
-const Card = ({ name, genres, image, id, createdInDB, setOrder }) => {
+const Card = ({ name, genres, image, id, createdInDB }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const handleDelete = () => {
-    dispatch(deleteVideogame(id));
-    dispatch(getVideogames());
-    history.push("/home");
+    const response = window.confirm("Are you sure you want to delete it?");
+    if (response) {
+      dispatch(deleteVideogame(id));
+      dispatch(getVideogames());
+      alert("Removed");
+      window.location.reload();
+    } else {
+      alert("The videogame is still ALIVE!");
+    }
   };
 
   return (
